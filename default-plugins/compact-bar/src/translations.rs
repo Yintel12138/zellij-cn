@@ -1,0 +1,211 @@
+/// Translation support for compact-bar plugin
+pub struct Translations {
+    pub language: String,
+}
+
+impl Translations {
+    pub fn new(language: &str) -> Self {
+        Translations {
+            language: language.to_string(),
+        }
+    }
+
+    pub fn get(&self, key: &str) -> &'static str {
+        match self.language.as_str() {
+            "zh" | "zh-CN" | "zh_CN" | "zh-Hans" => Self::zh(key),
+            _ => Self::en(key),
+        }
+    }
+
+    fn zh(key: &str) -> &'static str {
+        match key {
+            // Mode names
+            "mode.lock" => "锁定",
+            "mode.unlock" => "解锁",
+            "mode.pane" => "面板",
+            "mode.tab" => "标签",
+            "mode.resize" => "调整",
+            "mode.search" => "搜索",
+            "mode.quit" => "退出",
+            "mode.session" => "会话",
+            "mode.move" => "移动",
+            "mode.tmux" => "TMUX",
+            "mode.normal" => "正常",
+            "mode.scroll" => "滚动",
+            "mode.renametab" => "重命名标签",
+            "mode.renamepane" => "重命名面板",
+            "mode.entersearch" => "输入搜索",
+            "mode.prompt" => "提示",
+
+            // Action descriptions
+            "action.move_focus" => "移动焦点",
+            "action.move_pane" => "移动面板",
+            "action.resize_increase" => "向某方向增大尺寸",
+            "action.resize_decrease" => "向某方向减小尺寸",
+            "action.resize_increase_any" => "增大尺寸",
+            "action.resize_decrease_any" => "减小尺寸",
+            "action.resize_reset" => "重置尺寸",
+            "action.focus_next_pane" => "聚焦下一面板",
+            "action.focus_prev_pane" => "聚焦上一面板",
+            "action.focus_at" => "聚焦指定位置面板",
+            "action.move_pane_to" => "移动面板到指定位置",
+            "action.go_to_tab" => "跳转到标签",
+            "action.go_to_tab_name" => "按名称跳转标签",
+            "action.go_to_next_tab" => "下一个标签",
+            "action.go_to_prev_tab" => "上一个标签",
+            "action.toggle_floating_panes" => "切换浮动面板",
+            "action.toggle_pane_embed" => "切换面板嵌入/浮动",
+            "action.new_pane" => "新建面板",
+            "action.new_tab" => "新建标签",
+            "action.close" => "关闭标签或面板",
+            "action.detach" => "分离会话",
+            "action.quit" => "退出",
+            "action.lock" => "锁定界面",
+            "action.unlock" => "解锁界面",
+            "action.switch_mode" => "切换到模式",
+            "action.search" => "搜索",
+            "action.edit_scrollbuffer" => "在回滚中打开编辑器",
+            "action.write_chars" => "发送输入到终端",
+            "action.close_tab" => "关闭标签",
+            "action.close_pane" => "关闭面板",
+            "action.rename_tab" => "重命名标签",
+            "action.rename_pane" => "重命名面板",
+            "action.fullscreen" => "全屏",
+            "action.toggle_pane_frames" => "切换面板边框",
+            "action.undo_rename_tab" => "撤销重命名标签",
+            "action.undo_rename_pane" => "撤销重命名面板",
+            "action.scroll_up" => "向上滚动",
+            "action.scroll_down" => "向下滚动",
+            "action.page_scroll_up" => "向上翻页",
+            "action.page_scroll_down" => "向下翻页",
+            "action.half_page_scroll_up" => "向上滚动半页",
+            "action.half_page_scroll_down" => "向下滚动半页",
+            "action.scroll_to_top" => "滚动到顶部",
+            "action.scroll_to_bottom" => "滚动到底部",
+            "action.search_input" => "搜索输入",
+            "action.search_next" => "下一个匹配",
+            "action.search_prev" => "上一个匹配",
+            "action.search_toggle_case" => "切换大小写敏感",
+            "action.search_toggle_wrap" => "切换循环搜索",
+            "action.search_toggle_whole_word" => "切换全词匹配",
+            "action.confirm" => "确认",
+            "action.deny" => "拒绝",
+            "action.sync" => "同步",
+            "action.break_pane" => "分离面板到新标签",
+            "action.break_pane_right" => "分离面板到右侧标签",
+            "action.break_pane_left" => "分离面板到左侧标签",
+            "action.run_command" => "运行命令",
+            "action.clear" => "清屏",
+            "action.dump_screen" => "转储屏幕",
+
+            // Clipboard messages
+            "clipboard.copied_system" => "文本已复制到系统剪贴板",
+            "clipboard.copied_primary" => "文本已复制到系统主选区",
+            "clipboard.copied_command" => "文本已通过管道发送到外部命令",
+            "clipboard.error" => "使用系统剪贴板时出错",
+
+            // Tab messages
+            "tab.enter_name" => "输入名称...",
+            "tab.rename_tab" => "重命名标签",
+            "tab.sync" => "同步",
+
+            _ => Self::en(key),
+        }
+    }
+
+    fn en(key: &str) -> &'static str {
+        match key {
+            // Mode names
+            "mode.lock" => "LOCK",
+            "mode.unlock" => "UNLOCK",
+            "mode.pane" => "PANE",
+            "mode.tab" => "TAB",
+            "mode.resize" => "RESIZE",
+            "mode.search" => "SEARCH",
+            "mode.quit" => "QUIT",
+            "mode.session" => "SESSION",
+            "mode.move" => "MOVE",
+            "mode.tmux" => "TMUX",
+            "mode.normal" => "NORMAL",
+            "mode.scroll" => "SCROLL",
+            "mode.renametab" => "RENAME TAB",
+            "mode.renamepane" => "RENAME PANE",
+            "mode.entersearch" => "ENTER SEARCH",
+            "mode.prompt" => "PROMPT",
+
+            // Action descriptions
+            "action.move_focus" => "Move focus",
+            "action.move_pane" => "Move pane",
+            "action.resize_increase" => "Increase size in direction",
+            "action.resize_decrease" => "Decrease size in direction",
+            "action.resize_increase_any" => "Increase size",
+            "action.resize_decrease_any" => "Decrease size",
+            "action.resize_reset" => "Reset size",
+            "action.focus_next_pane" => "Focus next pane",
+            "action.focus_prev_pane" => "Focus previous pane",
+            "action.focus_at" => "Focus pane at location",
+            "action.move_pane_to" => "Move pane to location",
+            "action.go_to_tab" => "Go to tab",
+            "action.go_to_tab_name" => "Go to tab by name",
+            "action.go_to_next_tab" => "Go to next tab",
+            "action.go_to_prev_tab" => "Go to previous tab",
+            "action.toggle_floating_panes" => "Toggle floating panes",
+            "action.toggle_pane_embed" => "Toggle pane embed or floating",
+            "action.new_pane" => "New pane",
+            "action.new_tab" => "New tab",
+            "action.close" => "Close tab or pane",
+            "action.detach" => "Detach session",
+            "action.quit" => "Quit",
+            "action.lock" => "Lock interface",
+            "action.unlock" => "Unlock interface",
+            "action.switch_mode" => "Switch to mode",
+            "action.search" => "Search",
+            "action.edit_scrollbuffer" => "Open editor in scrollback",
+            "action.write_chars" => "Send input to terminal",
+            "action.close_tab" => "Close tab",
+            "action.close_pane" => "Close pane",
+            "action.rename_tab" => "Rename tab",
+            "action.rename_pane" => "Rename pane",
+            "action.fullscreen" => "Fullscreen",
+            "action.toggle_pane_frames" => "Toggle pane frames",
+            "action.undo_rename_tab" => "Undo rename tab",
+            "action.undo_rename_pane" => "Undo rename pane",
+            "action.scroll_up" => "Scroll up",
+            "action.scroll_down" => "Scroll down",
+            "action.page_scroll_up" => "Page scroll up",
+            "action.page_scroll_down" => "Page scroll down",
+            "action.half_page_scroll_up" => "Half page scroll up",
+            "action.half_page_scroll_down" => "Half page scroll down",
+            "action.scroll_to_top" => "Scroll to top",
+            "action.scroll_to_bottom" => "Scroll to bottom",
+            "action.search_input" => "Search input",
+            "action.search_next" => "Search next",
+            "action.search_prev" => "Search previous",
+            "action.search_toggle_case" => "Toggle case sensitivity",
+            "action.search_toggle_wrap" => "Toggle wrap search",
+            "action.search_toggle_whole_word" => "Toggle whole word",
+            "action.confirm" => "Confirm",
+            "action.deny" => "Deny",
+            "action.sync" => "Sync",
+            "action.break_pane" => "Break pane to new tab",
+            "action.break_pane_right" => "Break pane to tab right",
+            "action.break_pane_left" => "Break pane to tab left",
+            "action.run_command" => "Run command",
+            "action.clear" => "Clear",
+            "action.dump_screen" => "Dump screen",
+
+            // Clipboard messages
+            "clipboard.copied_system" => "Text copied to system clipboard",
+            "clipboard.copied_primary" => "Text copied to system primary selection",
+            "clipboard.copied_command" => "Text piped to external command",
+            "clipboard.error" => "Error using the system clipboard",
+
+            // Tab messages
+            "tab.enter_name" => "Enter name...",
+            "tab.rename_tab" => "RENAME TAB",
+            "tab.sync" => "Sync",
+
+            _ => "",
+        }
+    }
+}

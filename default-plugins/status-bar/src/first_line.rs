@@ -6,7 +6,7 @@ use crate::color_elements;
 use crate::{
     action_key, action_key_group, get_common_modifiers, style_key_with_modifier, TO_NORMAL,
 };
-use crate::{ColoredElements, LinePart};
+use crate::{ColoredElements, LinePart, Translations};
 
 #[derive(Debug)]
 pub struct KeyShortcut {
@@ -42,18 +42,19 @@ impl KeyShortcut {
         KeyShortcut { mode, action, key }
     }
 
-    pub fn full_text(&self) -> String {
+    pub fn full_text(&self, language: &str) -> String {
+        let t = Translations::new(language);
         match self.action {
-            KeyAction::Lock => String::from("LOCK"),
-            KeyAction::Unlock => String::from("UNLOCK"),
-            KeyAction::Pane => String::from("PANE"),
-            KeyAction::Tab => String::from("TAB"),
-            KeyAction::Resize => String::from("RESIZE"),
-            KeyAction::Search => String::from("SEARCH"),
-            KeyAction::Quit => String::from("QUIT"),
-            KeyAction::Session => String::from("SESSION"),
-            KeyAction::Move => String::from("MOVE"),
-            KeyAction::Tmux => String::from("TMUX"),
+            KeyAction::Lock => t.get("mode.lock").to_string(),
+            KeyAction::Unlock => t.get("mode.unlock").to_string(),
+            KeyAction::Pane => t.get("mode.pane").to_string(),
+            KeyAction::Tab => t.get("mode.tab").to_string(),
+            KeyAction::Resize => t.get("mode.resize").to_string(),
+            KeyAction::Search => t.get("mode.search").to_string(),
+            KeyAction::Quit => t.get("mode.quit").to_string(),
+            KeyAction::Session => t.get("mode.session").to_string(),
+            KeyAction::Move => t.get("mode.move").to_string(),
+            KeyAction::Tmux => t.get("mode.tmux").to_string(),
         }
     }
     pub fn with_shortened_modifiers(&self, common_modifiers: &Vec<KeyModifier>) -> String {
@@ -141,8 +142,9 @@ fn long_mode_shortcut(
     separator: &str,
     common_modifiers: &Vec<KeyModifier>,
     first_tile: bool,
+    language: &str,
 ) -> LinePart {
-    let key_hint = key.full_text();
+    let key_hint = key.full_text(language);
     let has_common_modifiers = !common_modifiers.is_empty();
     let key_binding = match (&key.mode, &key.key) {
         (KeyMode::Disabled, None) => "".to_string(),
@@ -193,8 +195,9 @@ fn shortened_modifier_shortcut(
     separator: &str,
     common_modifiers: &Vec<KeyModifier>,
     first_tile: bool,
+    language: &str,
 ) -> LinePart {
-    let key_hint = key.full_text();
+    let key_hint = key.full_text(language);
     let has_common_modifiers = !common_modifiers.is_empty();
     let key_binding = match (&key.mode, &key.key) {
         (KeyMode::Disabled, None) => "".to_string(),
@@ -301,12 +304,13 @@ fn key_indicators(
     palette: ColoredElements,
     separator: &str,
     mode_info: &ModeInfo,
+    language: &str,
 ) -> LinePart {
     // Print full-width hints
     let (shared_modifiers, mut line_part) = superkey(palette, separator, mode_info);
     for key in keys {
         let line_empty = line_part.len == 0;
-        let key = long_mode_shortcut(key, palette, separator, &shared_modifiers, line_empty);
+        let key = long_mode_shortcut(key, palette, separator, &shared_modifiers, line_empty, language);
         line_part.part = format!("{}{}", line_part.part, key.part);
         line_part.len += key.len;
     }
@@ -319,7 +323,7 @@ fn key_indicators(
     for key in keys {
         let line_empty = line_part.len == 0;
         let key =
-            shortened_modifier_shortcut(key, palette, separator, &shared_modifiers, line_empty);
+            shortened_modifier_shortcut(key, palette, separator, &shared_modifiers, line_empty, language);
         line_part.part = format!("{}{}", line_part.part, key.part);
         line_part.len += key.len;
     }
@@ -611,6 +615,7 @@ pub fn first_line(
     tab_info: Option<&TabInfo>,
     max_len: usize,
     separator: &str,
+    language: &str,
 ) -> LinePart {
     let supports_arrow_fonts = !help.capabilities.arrow_fonts;
     let colored_elements = color_elements(help.style.colors, !supports_arrow_fonts);
@@ -716,7 +721,7 @@ pub fn first_line(
     }
 
     let mut key_indicators =
-        key_indicators(max_len, &default_keys, colored_elements, separator, help);
+        key_indicators(max_len, &default_keys, colored_elements, separator, help, language);
     if key_indicators.len < max_len {
         if let Some(tab_info) = tab_info {
             let mut remaining_space = max_len - key_indicators.len;

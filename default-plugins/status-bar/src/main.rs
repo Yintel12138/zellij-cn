@@ -2,6 +2,7 @@ mod first_line;
 mod one_line_ui;
 mod second_line;
 mod tip;
+mod translations;
 
 use ansi_term::{
     ANSIString,
@@ -23,6 +24,7 @@ use second_line::{
     text_copied_hint,
 };
 use tip::utils::get_cached_tip_name;
+pub use translations::Translations;
 
 // for more of these, copy paste from: https://en.wikipedia.org/wiki/Box-drawing_character
 static ARROW_SEPARATOR: &str = "";
@@ -42,6 +44,7 @@ struct State {
     classic_ui: bool,
     base_mode_is_locked: bool,
     cached_keybinds: KeybindsVec,
+    language: String,
 }
 
 register_plugin!(State);
@@ -200,6 +203,10 @@ impl ZellijPlugin for State {
             .get("classic")
             .map(|c| c == "true")
             .unwrap_or(false);
+        self.language = configuration
+            .get("language")
+            .cloned()
+            .unwrap_or_else(|| "en".to_string());
         set_selectable(false);
         subscribe(&[
             EventType::ModeUpdate,
@@ -297,6 +304,7 @@ impl ZellijPlugin for State {
                     self.base_mode_is_locked,
                     self.text_copy_destination,
                     self.display_system_clipboard_failure,
+                    &self.language,
                 ),
                 fill_bg,
             );
@@ -305,7 +313,7 @@ impl ZellijPlugin for State {
 
         //TODO: Switch to UI components here
         let active_tab = self.tabs.iter().find(|t| t.active);
-        let first_line = first_line(&self.mode_info, active_tab, cols, separator);
+        let first_line = first_line(&self.mode_info, active_tab, cols, separator, &self.language);
         let second_line = self.second_line(cols);
 
         // [48;5;238m is white background, [0K is so that it fills the rest of the line

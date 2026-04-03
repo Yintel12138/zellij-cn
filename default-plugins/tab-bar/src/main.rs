@@ -1,5 +1,6 @@
 mod line;
 mod tab;
+mod translations;
 
 use std::cmp::{max, min};
 use std::collections::BTreeMap;
@@ -10,6 +11,7 @@ use zellij_tile::prelude::*;
 
 use crate::line::tab_line;
 use crate::tab::tab_style;
+use crate::translations::Translations;
 
 #[derive(Debug, Default)]
 pub struct LinePart {
@@ -33,6 +35,7 @@ struct State {
     tab_line: Vec<LinePart>,
     hide_swap_layout_indication: bool,
     cached_keybinds: KeybindsVec,
+    language: String,
 }
 
 static ARROW_SEPARATOR: &str = "";
@@ -45,6 +48,10 @@ impl ZellijPlugin for State {
             .get("hide_swap_layout_indication")
             .map(|s| s == "true")
             .unwrap_or(false);
+        self.language = configuration
+            .get("language")
+            .cloned()
+            .unwrap_or_else(|| "en".to_string());
         set_selectable(false);
         subscribe(&[
             EventType::TabUpdate,
@@ -127,7 +134,8 @@ impl ZellijPlugin for State {
             let mut tabname = t.name.clone();
             if t.active && self.mode_info.mode == InputMode::RenameTab {
                 if tabname.is_empty() {
-                    tabname = String::from("Enter name...");
+                    let translations = Translations::new(&self.language);
+                    tabname = String::from(translations.get("tab.enter_name"));
                 }
                 active_tab_index = t.position;
             } else if t.active {
@@ -139,6 +147,7 @@ impl ZellijPlugin for State {
                 is_alternate_tab,
                 self.mode_info.style.colors,
                 self.mode_info.capabilities,
+                &self.language,
             );
             is_alternate_tab = !is_alternate_tab;
             all_tabs.push(tab);

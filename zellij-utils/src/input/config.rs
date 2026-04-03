@@ -270,6 +270,16 @@ impl Config {
         self.env = self.env.merge(other.env);
         Ok(())
     }
+    /// Inject the language setting from options into all plugin configurations
+    pub fn inject_language_into_plugins(&mut self) {
+        if let Some(ref language) = self.options.language {
+            for (_alias_name, run_plugin) in self.plugins.aliases.iter_mut() {
+                if !run_plugin.configuration.inner().contains_key("language") {
+                    run_plugin.configuration.insert("language", language.clone());
+                }
+            }
+        }
+    }
     pub fn config_file_path(opts: &CliArgs) -> Option<PathBuf> {
         opts.config.clone().or_else(|| {
             opts.config_dir

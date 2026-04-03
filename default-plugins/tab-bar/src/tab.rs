@@ -1,4 +1,5 @@
 use crate::{line::tab_separator, LinePart};
+use crate::translations::Translations;
 use ansi_term::{ANSIString, ANSIStrings};
 use unicode_width::UnicodeWidthStr;
 use zellij_tile::prelude::*;
@@ -100,13 +101,15 @@ pub fn tab_style(
     mut is_alternate_tab: bool,
     palette: Styling,
     capabilities: PluginCapabilities,
+    language: &str,
 ) -> LinePart {
     let separator = tab_separator(capabilities);
+    let translations = Translations::new(language);
 
     if tab.is_fullscreen_active {
-        tabname.push_str(" (FULLSCREEN)");
+        tabname.push_str(&format!(" ({})", translations.get("tab.fullscreen")));
     } else if tab.is_sync_panes_active {
-        tabname.push_str(" (SYNC)");
+        tabname.push_str(&format!(" ({})", translations.get("tab.sync")));
     }
     if tab.has_bell_notification || tab.is_flashing_bell {
         tabname.push_str(" [!]");

@@ -1,6 +1,7 @@
 mod presets;
 mod presets_screen;
 mod rebind_leaders_screen;
+mod translations;
 mod ui_components;
 
 use zellij_tile::prelude::*;
@@ -8,6 +9,7 @@ use zellij_tile::prelude::*;
 use presets_screen::PresetsScreen;
 use rebind_leaders_screen::RebindLeadersScreen;
 use ui_components::top_tab_menu;
+use translations::Translations;
 
 use std::collections::BTreeMap;
 
@@ -72,6 +74,7 @@ struct State {
     current_screen: Screen,
     latest_mode_info: Option<ModeInfo>,
     colors: Styling,
+    language: String,
 }
 
 impl Default for State {
@@ -83,6 +86,7 @@ impl Default for State {
             current_screen: Screen::default(),
             latest_mode_info: None,
             colors: Palette::default().into(),
+            language: "en".to_string(),
         }
     }
 }
@@ -95,6 +99,10 @@ impl ZellijPlugin for State {
             .get("is_setup_wizard")
             .map(|v| v == "true")
             .unwrap_or(false);
+        self.language = configuration
+            .get("language")
+            .cloned()
+            .unwrap_or_else(|| "en".to_string());
         subscribe(&[
             EventType::Key,
             EventType::FailedToWriteConfigToDisk,

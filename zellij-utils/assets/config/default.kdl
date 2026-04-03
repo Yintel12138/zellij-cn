@@ -267,6 +267,11 @@ load_plugins {
 //
 // simplified_ui true
 
+// Set the language for Zellij's user interface
+// Supported values: "en" (English, default), "zh" (Chinese/中文)
+//
+// language "en"
+
 // Choose the path to the default shell that zellij will use for opening new panes
 // Default: $SHELL
 //

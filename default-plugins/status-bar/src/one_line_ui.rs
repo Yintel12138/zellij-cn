@@ -11,7 +11,7 @@ use zellij_tile_utils::palette_match;
 use crate::first_line::{to_char, KeyAction, KeyMode, KeyShortcut};
 use crate::second_line::{system_clipboard_error, text_copied_hint};
 use crate::{action_key, action_key_group, color_elements, MORE_MSG, TO_NORMAL};
-use crate::{ColoredElements, LinePart};
+use crate::{ColoredElements, LinePart, Translations};
 use unicode_width::UnicodeWidthStr;
 
 pub fn one_line_ui(
@@ -22,6 +22,7 @@ pub fn one_line_ui(
     base_mode_is_locked: bool,
     text_copied_to_clipboard_destination: Option<CopyDestination>,
     clipboard_failure: bool,
+    language: &str,
 ) -> LinePart {
     if let Some(text_copied_to_clipboard_destination) = text_copied_to_clipboard_destination {
         return text_copied_hint(text_copied_to_clipboard_destination);
@@ -35,7 +36,7 @@ pub fn one_line_ui(
         *max_len = max_len.saturating_sub(line_part.len);
     };
 
-    render_mode_key_indicators(help, max_len, separator, base_mode_is_locked)
+    render_mode_key_indicators(help, max_len, separator, base_mode_is_locked, language)
         .map(|mode_key_indicators| append(&mode_key_indicators, &mut max_len))
         .and_then(|_| match help.mode {
             InputMode::Normal | InputMode::Locked => render_secondary_info(help, tab_info, max_len)
@@ -499,6 +500,7 @@ fn render_mode_key_indicators(
     max_len: usize,
     separator: &str,
     base_mode_is_locked: bool,
+    language: &str,
 ) -> Option<LinePart> {
     let mut line_part_to_render = LinePart::default();
     let supports_arrow_fonts = !help.capabilities.arrow_fonts;
@@ -531,7 +533,7 @@ fn render_mode_key_indicators(
                 );
 
                 let full_shortcut_list =
-                    full_inline_keys_modes_shortcut_list(&keys_without_common_modifiers, help);
+                    full_inline_keys_modes_shortcut_list(&keys_without_common_modifiers, help, language);
 
                 if line_part_to_render.len + full_shortcut_list.len <= max_len {
                     line_part_to_render.append(&full_shortcut_list);
@@ -548,7 +550,7 @@ fn render_mode_key_indicators(
         },
         None => {
             if let Some(default_keys) = default_keys.get(&help.mode) {
-                let full_shortcut_list = full_modes_shortcut_list(&default_keys, help);
+                let full_shortcut_list = full_modes_shortcut_list(&default_keys, help, language);
                 if line_part_to_render.len + full_shortcut_list.len <= max_len {
                     line_part_to_render.append(&full_shortcut_list);
                 } else {
@@ -571,13 +573,14 @@ fn render_mode_key_indicators(
 fn full_inline_keys_modes_shortcut_list(
     keys_without_common_modifiers: &Vec<KeyShortcut>,
     help: &ModeInfo,
+    language: &str,
 ) -> LinePart {
     let mut full_shortcut_list = LinePart::default();
     for key in keys_without_common_modifiers {
         let is_selected = key.is_selected();
         let shortcut = add_shortcut_with_inline_key(
             help,
-            &key.full_text(),
+            &key.full_text(language),
             key.key
                 .as_ref()
                 .map(|k| vec![k.clone()])
@@ -609,13 +612,13 @@ fn shortened_inline_keys_modes_shortcut_list(
     shortened_shortcut_list
 }
 
-fn full_modes_shortcut_list(default_keys: &Vec<KeyShortcut>, help: &ModeInfo) -> LinePart {
+fn full_modes_shortcut_list(default_keys: &Vec<KeyShortcut>, help: &ModeInfo, language: &str) -> LinePart {
     let mut full_shortcut_list = LinePart::default();
     for key in default_keys {
         let is_selected = key.is_selected();
         full_shortcut_list.append(&add_shortcut(
             help,
-            &key.full_text(),
+            &key.full_text(language),
             &key.key
                 .as_ref()
                 .map(|k| vec![k.clone()])

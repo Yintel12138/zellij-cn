@@ -2,6 +2,7 @@ mod new_session_info;
 mod resurrectable_sessions;
 mod session_list;
 mod single_screen;
+mod translations;
 mod ui;
 use std::collections::BTreeMap;
 use uuid::Uuid;
@@ -9,6 +10,7 @@ use zellij_tile::prelude::*;
 
 use new_session_info::NewSessionInfo;
 use single_screen::{SingleScreenMode, SingleScreenState, UnifiedSearchResult};
+use translations::Translations;
 use ui::{
     components::{
         render_controls_line, render_error, render_new_session_block, render_prompt,
@@ -54,6 +56,7 @@ struct State {
     request_ids: Vec<String>,
     is_web_client: bool,
     current_session_last_saved_time: Option<u64>,
+    language: String,
 }
 
 register_plugin!(State);
@@ -75,6 +78,10 @@ impl ZellijPlugin for State {
         if !self.is_multi_screen {
             self.active_screen = ActiveScreen::SingleScreen;
         }
+        self.language = configuration
+            .get("language")
+            .cloned()
+            .unwrap_or_else(|| "en".to_string());
         self.single_screen_state.is_welcome_screen = self.is_welcome_screen;
         if !self.is_welcome_screen {
             set_timeout(0.1); // for the current_session_last_saved_time polling

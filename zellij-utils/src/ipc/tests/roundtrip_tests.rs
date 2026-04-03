@@ -476,6 +476,7 @@ fn test_client_messages() {
                 visual_bell: Some(true),
                 focus_follows_mouse: Some(false),
                 mouse_click_through: Some(false),
+                language: Some("zh".to_owned()),
             }),
             layout: None,
             terminal_window_size: Size { rows: 80, cols: 42 },

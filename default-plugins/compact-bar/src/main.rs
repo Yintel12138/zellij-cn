@@ -4,6 +4,7 @@ mod keybind_utils;
 mod line;
 mod tab;
 mod tooltip;
+mod translations;
 
 use std::cmp::{max, min};
 use std::collections::BTreeMap;
@@ -16,6 +17,7 @@ use crate::clipboard_utils::{system_clipboard_error, text_copied_hint};
 use crate::line::tab_line;
 use crate::tab::tab_style;
 use crate::tooltip::TooltipRenderer;
+use crate::translations::Translations;
 
 static ARROW_SEPARATOR: &str = "";
 
@@ -63,6 +65,9 @@ struct State {
 
     // Keybinding cache
     cached_keybinds: KeybindsVec,
+    
+    // Localization
+    language: String,
 }
 
 struct TabRenderData {
@@ -147,6 +152,10 @@ impl State {
     fn initialize_configuration(&mut self, configuration: BTreeMap<String, String>) {
         self.config = configuration.clone();
         self.is_tooltip = self.parse_bool_config(CONFIG_IS_TOOLTIP, false);
+        self.language = configuration
+            .get("language")
+            .cloned()
+            .unwrap_or_else(|| "en".to_string());
 
         if !self.is_tooltip {
             if let Some(tooltip_toggle_key) = configuration.get(CONFIG_TOGGLE_TOOLTIP_KEY) {

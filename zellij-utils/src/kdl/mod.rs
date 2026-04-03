@@ -2817,6 +2817,8 @@ impl Options {
         let mouse_click_through =
             kdl_property_first_arg_as_bool_or_error!(kdl_options, "mouse_click_through")
                 .map(|(v, _)| v);
+        let language = kdl_property_first_arg_as_string_or_error!(kdl_options, "language")
+            .map(|(language, _entry)| language.to_string());
 
         Ok(Options {
             simplified_ui,
@@ -2857,6 +2859,7 @@ impl Options {
             visual_bell,
             focus_follows_mouse,
             mouse_click_through,
+            language,
             web_server_ip,
             web_server_port,
             web_server_cert,
@@ -4067,6 +4070,34 @@ impl Options {
             None
         }
     }
+    fn language_to_kdl(&self, add_comments: bool) -> Option<KdlNode> {
+        let comment_text = format!(
+            "{}\n{}\n{}\n{}",
+            " ",
+            "// Set the language for UI text",
+            "// Options: \"en\" (English, default), \"zh\" (Chinese)",
+            "// default is \"en\"",
+        );
+
+        let create_node = |node_value: &str| -> KdlNode {
+            let mut node = KdlNode::new("language");
+            node.push(KdlValue::String(node_value.to_string()));
+            node
+        };
+        if let Some(ref language) = self.language {
+            let mut node = create_node(language);
+            if add_comments {
+                node.set_leading(format!("{}\n", comment_text));
+            }
+            Some(node)
+        } else if add_comments {
+            let mut node = create_node("en");
+            node.set_leading(format!("{}\n// ", comment_text));
+            Some(node)
+        } else {
+            None
+        }
+    }
     fn web_server_ip_to_kdl(&self, add_comments: bool) -> Option<KdlNode> {
         let comment_text = format!(
             "{}\n{}\n{}\n{}",
@@ -4309,6 +4340,9 @@ impl Options {
         }
         if let Some(mouse_click_through) = self.mouse_click_through_to_kdl(add_comments) {
             nodes.push(mouse_click_through);
+        }
+        if let Some(language) = self.language_to_kdl(add_comments) {
+            nodes.push(language);
         }
         if let Some(web_server_ip) = self.web_server_ip_to_kdl(add_comments) {
             nodes.push(web_server_ip);
@@ -4818,6 +4852,8 @@ impl Config {
             let config_web_client = WebClientConfig::from_kdl(&web_client_config)?;
             config.web_client = config.web_client.merge(config_web_client);
         }
+        // Inject language setting into plugin configurations
+        config.inject_language_into_plugins();
         Ok(config)
     }
     pub fn to_string(&self, add_comments: bool) -> String {
