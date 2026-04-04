@@ -2,7 +2,7 @@
   <br>
   <img src="https://raw.githubusercontent.com/zellij-org/zellij/main/assets/logo.png" alt="logo" width="200">
   <br>
-  Zellij
+  Zellij 中文版 (zellij-cn)
   <br>
   <br>
 </h1>
@@ -10,108 +10,159 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/zellij-org/zellij/main/assets/demo.gif" alt="demo">
 </p>
-<h4 align="center">
-  [<a href="https://zellij.dev/documentation/installation">Installation</a>]
-  [<a href="https://zellij.dev/screencasts/">Screencasts & Tutorials</a>]
-  [<a href="https://zellij.dev/documentation/configuration">Configuration</a>]
-  [<a href="https://zellij.dev/documentation/layouts">Layouts</a>]
-  [<a href="https://zellij.dev/documentation/faq">FAQ</a>]
-</h4>
+
 <p align="center">
-  <a href="https://discord.gg/CrUAFH3"><img alt="Discord Chat" src="https://img.shields.io/discord/771367133715628073?color=5865F2&label=discord&style=flat-square"></a>
-  <a href="https://matrix.to/#/#zellij_general:matrix.org"><img alt="Matrix Chat" src="https://img.shields.io/matrix/zellij_general:matrix.org?color=1d7e64&label=matrix%20chat&style=flat-square&logo=matrix"></a>
-  <a href="https://zellij.dev/documentation/"><img alt="Zellij documentation" src="https://img.shields.io/badge/zellij-documentation-fc0060?style=flat-square"></a>
+  <a href="https://github.com/Yintel12138/zellij-cn/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/v/release/Yintel12138/zellij-cn?style=flat-square&label=最新版本"></a>
+  <a href="https://github.com/Yintel12138/zellij-cn/actions/workflows/rust.yml"><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/Yintel12138/zellij-cn/rust.yml?branch=main&style=flat-square&label=构建状态"></a>
+  <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
 </p>
 
-<br>
-    <p align="center">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/bc5daac4-140a-4b83-8729-71c944ee1100">
-      <img src="https://github.com/user-attachments/assets/55156624-a71a-46b5-939e-f562e3b2dd7f" alt="Sponsored by ">
-    </picture>
-    &nbsp;
-    &nbsp;
-    <a href="https://www.gresearch.com/">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/d609936a-abf8-4406-8cfc-889f76a09d74">
-          <img src="https://github.com/user-attachments/assets/742ae902-fe9d-41c6-baf2-4bc143061da3" alt="gresearch logo">
-        </picture>
-    </a>
-</p>
+---
 
-# What is this?
+**zellij-cn** 是 [Zellij](https://github.com/zellij-org/zellij) 的中文本地化 fork，在不修改原有功能的前提下，新增了 `language` 配置项，可将终端多路复用器的界面切换为中文。
 
-[Zellij](#origin-of-the-name) is a workspace aimed at developers, ops-oriented people and anyone who loves the terminal. Similar programs are sometimes called "Terminal Multiplexers".
+> **与上游保持同步**：所有改动均为加法式（新增字段，默认英文），可直接 `git merge` 上游更新，几乎不产生冲突。
 
-Zellij is designed around the philosophy that one must not sacrifice simplicity for power, taking pride in its great experience out of the box as well as the advanced features it places at its users' fingertips.
+---
 
-Zellij is geared toward beginner and power users alike - allowing deep customizability, personal automation through [layouts](https://zellij.dev/documentation/layouts.html), true multiplayer collaboration, unique UX features such as floating and stacked panes, and a [plugin system](https://zellij.dev/documentation/plugins.html) allowing one to create plugins in any language that compiles to WebAssembly.
+## 安装方法
 
-Zellij includes a built-in [web-client](https://zellij.dev/tutorials/web-client/), making a terminal optional.
+### 方法一：下载预编译二进制（推荐，无需 Rust 环境）
 
-You can get started by [installing](https://zellij.dev/documentation/installation.html) Zellij and checking out the [Screencasts & Tutorials](https://zellij.dev/screencasts/).
+前往 [Releases 页面](https://github.com/Yintel12138/zellij-cn/releases/latest) 下载对应平台的压缩包，或使用以下一键命令：
 
-For more details about our future plans, read about upcoming features in our [roadmap](#roadmap).
-
-## How do I install it?
-
-The easiest way to install Zellij is through a [package for your OS](./docs/THIRD_PARTY_INSTALL.md).
-
-If one is not available for your OS, you could download a prebuilt binary from the [latest release](https://github.com/zellij-org/zellij/releases/latest) and place it in your `$PATH`. If you'd like, we could [automatically choose one for you](#try-zellij-without-installing).
-
-You can also install (compile) with `cargo`:
-
-```
-cargo install --locked zellij
-```
-
-#### Try Zellij without installing
-
-bash/zsh:
+**Linux x86_64：**
 ```bash
-bash <(curl -L https://zellij.dev/launch)
+curl -L https://github.com/Yintel12138/zellij-cn/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz \
+  | tar xz
+sudo mv zellij /usr/local/bin/
 ```
-fish/xonsh:
+
+**Linux ARM64（树莓派等）：**
 ```bash
-bash -c 'bash <(curl -L https://zellij.dev/launch)'
+curl -L https://github.com/Yintel12138/zellij-cn/releases/latest/download/zellij-aarch64-unknown-linux-musl.tar.gz \
+  | tar xz
+sudo mv zellij /usr/local/bin/
 ```
 
-#### Installing from `main`
-Installing Zellij from the `main` branch is not recommended. This branch represents pre-release code, is constantly being worked on and may contain broken or unusable features. In addition, using it may corrupt the cache for future versions, forcing users to clear it before they can use the officially released version.
+**macOS Apple Silicon (M1/M2/M3)：**
+```bash
+curl -L https://github.com/Yintel12138/zellij-cn/releases/latest/download/zellij-aarch64-apple-darwin.tar.gz \
+  | tar xz
+sudo mv zellij /usr/local/bin/
+```
 
-That being said - no-one will stop you from using it (and bug reports involving new features are greatly appreciated), but please consider using the latest release instead as detailed at the top of this section.
+**macOS Intel：**
+```bash
+curl -L https://github.com/Yintel12138/zellij-cn/releases/latest/download/zellij-x86_64-apple-darwin.tar.gz \
+  | tar xz
+sudo mv zellij /usr/local/bin/
+```
 
-## How do I start a development environment?
+**Windows：** 在 [Releases](https://github.com/Yintel12138/zellij-cn/releases/latest) 下载 `zellij-x86_64-pc-windows-msvc.zip` 或 `.msi` 安装包。
 
-* Clone the project
-* In the project folder, for debug builds run: `cargo xtask run`
-* To run all tests: `cargo xtask test`
+---
 
-For more build commands, see [CONTRIBUTING.md](CONTRIBUTING.md).
+### 方法二：`cargo binstall`（自动选择平台二进制）
 
-## Configuration
-For configuring Zellij, please see the [Configuration Documentation](https://zellij.dev/documentation/configuration.html).
+```bash
+cargo binstall --git https://github.com/Yintel12138/zellij-cn zellij
+```
 
-## About issues in this repository
-Issues in this repository, whether open or closed, do not necessarily indicate a problem or a bug in the software. They only indicate that the reporter wanted to communicate their experiences or thoughts to the maintainers. The Zellij maintainers do their best to go over and reply to all issue reports, but unfortunately cannot promise these will always be dealt with or even read. Your understanding is appreciated.
+> 需要先安装 [cargo-binstall](https://github.com/cargo-bins/cargo-binstall)：`cargo install cargo-binstall`
 
-## Roadmap
-Presented here is the project roadmap, divided into three main sections.
+---
 
-These are issues that are either being actively worked on or are planned for the near future.
+### 方法三：从源码编译
 
-***If you'll click on the image, you'll be led to an SVG version of it on the website where you can directly click on every issue***
+```bash
+# 克隆本仓库
+git clone https://github.com/Yintel12138/zellij-cn
+cd zellij-cn
 
-[![roadmap](https://github.com/user-attachments/assets/bb55d213-4a68-4c84-ae72-7db5c9bf94fb)](https://zellij.dev/roadmap)
+# 安装依赖并编译（需要 Rust 1.92+ 及 wasm32-wasip1 target）
+rustup target add wasm32-wasip1
+cargo install --path . --locked
+```
 
-## Origin of the Name
-[From Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Zellij)
+---
 
-Zellij (Arabic: الزليج, romanized: zillīj; also spelled zillij or zellige) is a style of mosaic tilework made from individually hand-chiseled tile pieces. The pieces were typically of different colours and fitted together to form various patterns on the basis of tessellations, most notably elaborate Islamic geometric motifs such as radiating star patterns composed of various polygons. This form of Islamic art is one of the main characteristics of architecture in the western Islamic world. It is found in the architecture of Morocco, the architecture of Algeria, early Islamic sites in Tunisia, and in the historic monuments of al-Andalus (in the Iberian Peninsula).
+## 启用中文界面
 
-## License
+安装完成后，编辑 Zellij 配置文件，添加 `language "zh"` 即可：
+
+**配置文件路径：** `~/.config/zellij/config.kdl`
+
+```kdl
+// 将界面语言切换为中文
+language "zh"
+
+// 其余配置保持不变...
+```
+
+然后启动 Zellij：
+
+```bash
+zellij
+```
+
+### 效果预览
+
+| 区域 | 英文（默认） | 中文（`language "zh"`） |
+|------|------------|------------------------|
+| 普通模式 | `NORMAL` | `普通` |
+| 面板模式 | `PANE` | `面板` |
+| 标签模式 | `TAB` | `标签` |
+| 调整模式 | `RESIZE` | `调整` |
+| 会话模式 | `SESSION` | `会话` |
+| 搜索模式 | `SEARCH` | `搜索` |
+| 锁定模式 | `LOCK` | `锁定` |
+| 界面锁定横幅 | `-- INTERFACE LOCKED --` | `-- 界面已锁定 --` |
+| 标签重命名输入框 | `Enter name...` | `输入名称...` |
+
+---
+
+## 开发环境
+
+```bash
+# 克隆并运行（调试构建）
+git clone https://github.com/Yintel12138/zellij-cn
+cd zellij-cn
+cargo xtask run
+
+# 运行全部测试
+cargo xtask test
+```
+
+更多构建命令请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+---
+
+## GitHub Actions
+
+本仓库已配置自动化工作流：
+
+| 工作流 | 触发条件 | 说明 |
+|--------|---------|------|
+| **Rust**（[rust.yml](.github/workflows/rust.yml)） | push/PR 到 `main` | 编译 + 测试（Linux、macOS、Windows） |
+| **Release**（[release.yml](.github/workflows/release.yml)） | 推送 `v*.*.*` tag 或手动触发 | 编译多平台二进制并发布到 GitHub Releases |
+
+**手动触发 Release：** 在仓库的 `Actions → Release → Run workflow` 中输入 tag 名称（如 `v0.44.0-cn1`）即可触发构建。
+
+---
+
+## 与上游的关系
+
+本项目基于 [zellij-org/zellij](https://github.com/zellij-org/zellij) v0.44.0，仅新增以下内容：
+- `Options` 结构体中的 `language` 字段（含 KDL 解析、protobuf 传递）
+- 各内置插件的 `translations.rs` 翻译模块
+- 插件 `load()` 入口处读取语言配置的少量修改
+
+上游升级时，冲突极少，可直接 merge。
+
+---
+
+## 许可证
 
 MIT
 
-## Sponsored by
-<a href="https://terminaltrove.com/"><img src="https://avatars.githubusercontent.com/u/121595180?s=200&v=4" width="80px"></a>
